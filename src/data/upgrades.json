@@ -1,0 +1,42 @@
+[
+  {
+    "item": "Pokedex",
+    "amount": 2,
+    "modifier": "Mon Locked Checks",
+    "triggers": [
+      { "option": "Dexsanity", "test": "nonzero" },
+      { "option": "Dexcountsanity", "test": "nonzero" },
+      { "option": "Randomize Pokemon Requests", "test": "notEquals", "value": "Off" }
+    ]
+  },
+  {
+    "item": "Bicycle",
+    "amount": 2,
+    "modifier": "Hidden Items",
+    "triggers": [{ "option": "Randomize Hidden Items", "test": "notEquals", "value": "No" }]
+  },
+  {
+    "item": "Bicycle",
+    "amount": 2,
+    "modifier": "National Park Bike",
+    "triggers": [{ "option": "National Park Access", "test": "equals", "value": "Bicycle" }]
+  },
+  {
+    "item": "TM08",
+    "amount": 4,
+    "modifier": "Mt. Mortar Rocks",
+    "triggers": [{ "option": "Mount Mortar Access", "test": "equals", "value": "Rock Smash" }]
+  },
+  {
+    "item": "Blue Card",
+    "amount": 2,
+    "modifier": "Buena Items",
+    "triggers": [{ "option": "Shopsanity", "test": "truthy" }]
+  },
+  {
+    "item": "Coin Case",
+    "amount": 2,
+    "modifier": "Game Corner",
+    "triggers": [{ "option": "Shopsanity", "test": "truthy" }]
+  }
+]

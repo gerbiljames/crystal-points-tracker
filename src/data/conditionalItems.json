@@ -1,0 +1,18 @@
+[
+  {
+    "item": "TM12",
+    "points": 5,
+    "triggers": [
+      { "option": "Dexsanity", "test": "nonzero" },
+      { "option": "Dexcountsanity", "test": "nonzero" }
+    ]
+  },
+  {
+    "item": "TM02",
+    "points": 5,
+    "triggers": [
+      { "option": "Dexsanity", "test": "nonzero" },
+      { "option": "Dexcountsanity", "test": "nonzero" }
+    ]
+  }
+]

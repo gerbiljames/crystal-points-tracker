@@ -1,0 +1,18 @@
+[
+  { "id": "starting",      "name": "New Bark / Cherrygrove", "order": 1 },
+  { "id": "violet",        "name": "Violet City",            "order": 2 },
+  { "id": "alph",          "name": "Ruins of Alph / Union",  "order": 3 },
+  { "id": "azalea",        "name": "Azalea Town",            "order": 4 },
+  { "id": "goldenrod",     "name": "Goldenrod City",         "order": 5 },
+  { "id": "ecruteak",      "name": "Ecruteak City",          "order": 6 },
+  { "id": "olivine",       "name": "Olivine City",           "order": 7 },
+  { "id": "cianwood",      "name": "Cianwood City",          "order": 8 },
+  { "id": "mt_mortar",     "name": "Mt. Mortar",             "order": 9 },
+  { "id": "mahogany",      "name": "Mahogany / Lake of Rage","order": 10 },
+  { "id": "ice_path",      "name": "Ice Path",               "order": 11 },
+  { "id": "blackthorn",    "name": "Blackthorn City",        "order": 12 },
+  { "id": "kanto_west",    "name": "Kanto — West",       "order": 13 },
+  { "id": "kanto_central", "name": "Kanto — Central",    "order": 14 },
+  { "id": "kanto_south",   "name": "Kanto — South",      "order": 15 },
+  { "id": "victory_road",  "name": "Victory Road",           "order": 16 }
+]

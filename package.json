@@ -1,0 +1,23 @@
+{
+  "name": "crystal-points-tracker",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "gen": "node scripts/generate-data.mjs",
+    "dev": "node scripts/generate-data.mjs && vite",
+    "build": "node scripts/generate-data.mjs && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^25.8.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.13",
+    "vite-plugin-solid": "^2.11.12"
+  },
+  "dependencies": {
+    "solid-js": "^1.9.13"
+  }
+}
