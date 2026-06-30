@@ -100,6 +100,18 @@ button.ghost.tiny { padding: 3px 8px; font-size: 9px; }
   white-space: nowrap;
 }
 .nav .ghost { align-self: center; }
+.gh-link {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: var(--ink-1);
+  transition: color 140ms, filter 140ms;
+}
+.gh-link:hover { color: var(--lav-bright); filter: drop-shadow(0 0 6px rgba(149, 123, 194, 0.6)); }
+.gh-link svg { width: 20px; height: 20px; display: block; fill: currentColor; }
 
 main { padding: 32px 24px 48px; }
 
