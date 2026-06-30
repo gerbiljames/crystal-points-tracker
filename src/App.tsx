@@ -63,16 +63,14 @@ function Landing() {
     <section class="landing">
       <div class="blurb">
         <h1>
-          Turn your spoiler into a <em>points hint</em>.
+          <em>Point Tracker</em> for Pokémon Crystal Archipelago
         </h1>
         <p>
           Drop in an Archipelago multiworld spoiler. Every key item in your Crystal
-          slot is grouped into one of sixteen regions and scored. You see only each
-          region's point total, never the contents. As you find items, file them away
-          and watch the remaining points fall.
+          slot is grouped into one of sixteen regions and scored by importance. As you
+          find items, file them away and watch each region's remaining points fall.
         </p>
         <ul class="blurb-list">
-          <li>Nothing leaves your browser; the spoiler is parsed locally.</li>
           <li>Badges 9 · HMs &amp; gear 7 · majors 5 · the rest 3.</li>
           <li>Progress is saved; refresh and pick up where you left off.</li>
         </ul>

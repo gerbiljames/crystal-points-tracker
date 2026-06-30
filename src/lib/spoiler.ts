@@ -52,6 +52,18 @@ export function slotsIn(placements: Placement[]): string[] {
 }
 
 /**
+ * The Crystal slot's player name, read from the world's spoiler header line
+ * `Pokemon Crystal (<name>):`. Solo spoilers omit the slot from placement
+ * lines, so this recovers the real name. Returns null if absent (e.g. a
+ * non-Crystal spoiler). Only the header (above Locations) is searched.
+ */
+export function crystalSlotName(text: string): string | null {
+  const header = text.split(/\r?\nLocations:\s*\r?\n/)[0];
+  const m = header.match(/^Pokemon Crystal \((.+)\):\s*$/m);
+  return m ? m[1].trim() : null;
+}
+
+/**
  * The `Name: value` options header above the Locations section, scoped per
  * slot. A multiworld spoiler prefixes each player's option block with a
  * `Player N: <name>` line; a solo spoiler omits it, so its single block is

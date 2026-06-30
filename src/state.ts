@@ -8,7 +8,7 @@
 
 import { createRoot, createMemo, createEffect, createSignal } from "solid-js";
 import { createStore, reconcile } from "solid-js/store";
-import { Placement, parseOptionsBySlot } from "./lib/spoiler";
+import { Placement, parseOptionsBySlot, crystalSlotName, SOLO_SLOT } from "./lib/spoiler";
 import { SpoilerSource } from "./lib/source";
 import { scorePlacements, regionScores } from "./lib/scoring";
 import { ITEM_LABELS } from "./lib/data";
@@ -86,12 +86,25 @@ function commit(p: Pending, slot: string): void {
 export async function loadSpoilerFile(file: File): Promise<void> {
   const text = await file.text();
   const source = new SpoilerSource(file.name, text);
-  const p: Pending = {
-    fileName: file.name,
-    slots: source.slots(),
-    placements: source.allPlacements(),
-    optionsBySlot: parseOptionsBySlot(text),
-  };
+  let slots = source.slots();
+  let placements = source.allPlacements();
+  const optionsBySlot = parseOptionsBySlot(text);
+
+  // Solo spoilers don't carry the slot name in placement lines (we tag them
+  // SOLO_SLOT). Recover the real name from the Crystal world's header line.
+  if (slots.length === 1 && slots[0] === SOLO_SLOT) {
+    const name = crystalSlotName(text);
+    if (name && name !== SOLO_SLOT) {
+      placements = placements.map((pl) => ({ ...pl, slot: name }));
+      if (optionsBySlot[SOLO_SLOT]) {
+        optionsBySlot[name] = optionsBySlot[SOLO_SLOT];
+        delete optionsBySlot[SOLO_SLOT];
+      }
+      slots = [name];
+    }
+  }
+
+  const p: Pending = { fileName: file.name, slots, placements, optionsBySlot };
   if (p.slots.length <= 1) commit(p, p.slots[0] ?? "");
   else store.setPending(p);
 }
