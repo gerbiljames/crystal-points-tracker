@@ -10,6 +10,7 @@ import { createRoot, createMemo, createEffect, createSignal } from "solid-js";
 import { createStore, reconcile } from "solid-js/store";
 import { Placement, parseOptionsBySlot, crystalSlotName, SOLO_SLOT } from "./lib/spoiler";
 import { SpoilerSource } from "./lib/source";
+import { LiveApSource, ConnectParams } from "./lib/liveSource";
 import { scorePlacements, regionScores } from "./lib/scoring";
 import { ITEM_LABELS } from "./lib/data";
 import { upgradeBonuses, activeModifiers, conditionalPoints } from "./lib/upgrades";
@@ -25,6 +26,8 @@ export interface Session {
   placements: Placement[]; // chosen slot only
   options: Record<string, string>; // chosen slot's options header
   found: Record<string, boolean>; // location label -> found
+  source: "spoiler" | "live";
+  conn?: ConnectParams; // live connection details, persisted for auto-reconnect
 }
 
 // A freshly-uploaded multi-slot spoiler, awaiting the user's slot choice.
@@ -41,6 +44,7 @@ const EMPTY: Session = {
   placements: [],
   options: {},
   found: {},
+  source: "spoiler",
 };
 
 // ---------- global preferences (independent of the loaded seed) ----------
@@ -93,6 +97,11 @@ export function setReveal(v: boolean): void {
 
 export const [settingsOpen, setSettingsOpen] = createSignal(false);
 
+// Whether the live connection is currently up. False while a live session is
+// loaded but disconnected (auto-reconnect failed or the socket dropped), which
+// the UI surfaces instead of masquerading as connected.
+export const [liveConnected, setLiveConnected] = createSignal(false);
+
 function build() {
   // Merge over EMPTY so a session persisted by an older schema can't leave
   // required keys undefined.
@@ -113,6 +122,10 @@ function build() {
 
 const store = createRoot(build);
 
+// The live connection lives outside the reactive store so it can be torn down
+// on reset/reconnect without being serialized.
+let live: LiveApSource | null = null;
+
 export const session = store.session;
 export const scored = store.scored;
 export const scores = store.scores;
@@ -121,12 +134,17 @@ export const conditional = store.conditional;
 export const pending = store.pending;
 
 function commit(p: Pending, slot: string): void {
+  live?.disconnect();
+  live = null;
+  setLiveConnected(false);
   store.setSession({
     fileName: p.fileName,
     slot,
     placements: p.placements.filter((pl) => pl.slot === slot),
     options: p.optionsBySlot[slot] ?? {},
     found: {},
+    source: "spoiler",
+    conn: undefined,
   });
   store.setPending(null);
 }
@@ -171,7 +189,50 @@ export function toggleFound(location: string): void {
   store.setSession("found", location, (v) => !v);
 }
 
+/**
+ * Connect to a live AP slot: scout its placements, seed found from checked
+ * locations, and keep found in sync as new locations are checked. Throws if
+ * login fails so the caller can surface the error.
+ */
+export async function connectLive(params: ConnectParams): Promise<void> {
+  live?.disconnect();
+  setLiveConnected(false);
+  live = new LiveApSource();
+  const snap = await live.connect(params, {
+    onChecked: (labels) => {
+      for (const label of labels) store.setSession("found", label, true);
+    },
+    onDisconnected: () => setLiveConnected(false),
+  });
+  store.setPending(null);
+  store.setSession({
+    fileName: null,
+    slot: snap.slot,
+    placements: snap.placements,
+    options: snap.options,
+    found: snap.found,
+    source: "live",
+    conn: params,
+  });
+  setLiveConnected(true);
+}
+
+/** Re-establish the current live session's connection (after a drop/failed load). */
+export function reconnect(): void {
+  if (session.conn) void connectLive(session.conn).catch(() => {});
+}
+
 export function resetAll(): void {
+  live?.disconnect();
+  live = null;
+  setLiveConnected(false);
   store.setPending(null);
   store.setSession(reconcile(EMPTY));
+}
+
+// Auto-reconnect a persisted live session on load; found is always re-derived
+// from the server. A failed reconnect leaves the last-known board with
+// liveConnected() false, so the UI shows a disconnected/reconnect state.
+if (session.source === "live" && session.conn) {
+  void connectLive(session.conn).catch(() => {});
 }

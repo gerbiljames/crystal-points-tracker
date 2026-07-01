@@ -12,6 +12,14 @@ the rest are.
 
 The spoiler is parsed entirely in your browser; nothing is uploaded anywhere.
 
+## Connect live
+
+Instead of a spoiler you can **connect to a running Archipelago server**. Enter
+the host, port, slot name, and password; the board fills from the server and
+key items mark themselves off as you check their locations in-game — no manual
+clicking. Connection details (including the password) are saved to
+`localStorage` so a refresh reconnects automatically.
+
 ## Points
 
 Each scoring key item is worth a fixed number of points by importance:

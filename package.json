@@ -18,6 +18,7 @@
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
+    "archipelago.js": "^2.1.0",
     "solid-js": "^1.9.13"
   }
 }

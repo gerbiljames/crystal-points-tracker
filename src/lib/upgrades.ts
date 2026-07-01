@@ -9,7 +9,7 @@ import conditionalData from "../data/conditionalItems.json";
 
 interface Trigger {
   option: string;
-  test: "nonzero" | "truthy" | "notEquals" | "equals";
+  test: "nonzero" | "truthy" | "notEquals" | "equals" | "includes";
   value?: string;
 }
 interface Rule {
@@ -49,6 +49,15 @@ function passes(t: Trigger, opts: Record<string, string>): boolean {
       return v != null && v.trim() !== t.value;
     case "equals":
       return v != null && v.trim() === t.value;
+    // Membership in a comma-separated set option (e.g. Shopsanity shops).
+    case "includes":
+      return (
+        v != null &&
+        v
+          .split(",")
+          .map((s) => s.trim().toLowerCase())
+          .includes((t.value ?? "").trim().toLowerCase())
+      );
   }
   return false;
 }

@@ -1,7 +1,8 @@
 import { For, Show, createMemo } from "solid-js";
-import { session, scores, pending, modifiers, loadSpoilerFile, selectSlot, cancelUpload, resetAll, setSettingsOpen } from "./state";
+import { session, scores, pending, modifiers, liveConnected, loadSpoilerFile, selectSlot, cancelUpload, resetAll, reconnect, setSettingsOpen } from "./state";
 import { displayName } from "./lib/data";
 import { Dropzone } from "./components/Dropzone";
+import { ConnectForm } from "./components/ConnectForm";
 import { RegionGrid } from "./components/RegionGrid";
 import { KeyItemTray } from "./components/KeyItemTray";
 import { Settings } from "./components/Settings";
@@ -15,12 +16,24 @@ export function App() {
         </div>
         <span class="brand-sub">archipelago hint tracker</span>
         <div class="spacer" />
-        <Show when={session.fileName}>
-          <span class="file-chip" title={session.fileName!}>
+        <Show when={session.slot}>
+          <span class="file-chip" title={session.fileName || session.slot!}>
+            <Show when={session.source === "live"}>
+              <span
+                class="live-dot"
+                data-connected={liveConnected()}
+                title={liveConnected() ? "connected to Archipelago" : "disconnected"}
+              />
+            </Show>
             {session.slot || session.fileName}
           </span>
+          <Show when={session.source === "live" && !liveConnected()}>
+            <button class="ghost" onClick={reconnect}>
+              reconnect
+            </button>
+          </Show>
           <button class="ghost" onClick={resetAll}>
-            reset
+            {session.source === "live" ? "disconnect" : "reset"}
           </button>
         </Show>
         <button
@@ -48,7 +61,7 @@ export function App() {
       </header>
 
       <main>
-        <Show when={session.fileName} fallback={<Landing />}>
+        <Show when={session.slot} fallback={<Landing />}>
           <Tracker />
         </Show>
       </main>
@@ -101,6 +114,8 @@ function Landing() {
       </div>
       <div class="landing-drop">
         <Dropzone onFile={(f) => void loadSpoilerFile(f)} />
+        <div class="landing-or">or connect to Archipelago</div>
+        <ConnectForm />
       </div>
     </section>
   );

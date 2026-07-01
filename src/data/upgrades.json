@@ -31,12 +31,12 @@
     "item": "Blue Card",
     "amount": 2,
     "modifier": "Buena Items",
-    "triggers": [{ "option": "Shopsanity", "test": "truthy" }]
+    "triggers": [{ "option": "Shopsanity", "test": "includes", "value": "Blue Card" }]
   },
   {
     "item": "Coin Case",
     "amount": 2,
     "modifier": "Game Corner",
-    "triggers": [{ "option": "Shopsanity", "test": "truthy" }]
+    "triggers": [{ "option": "Shopsanity", "test": "includes", "value": "Game Corners" }]
   }
 ]

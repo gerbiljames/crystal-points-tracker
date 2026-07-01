@@ -13,6 +13,9 @@ interface Group {
 }
 
 export function KeyItemTray() {
+  // In live mode the server drives found; the tray is a read-only display.
+  const live = () => session.source === "live";
+
   const groups = createMemo<Group[]>(() => {
     const m = new Map<string, Group>();
     for (const s of scored()) {
@@ -28,6 +31,7 @@ export function KeyItemTray() {
   // Clicking the row toggles the whole group: if every copy is found, clear
   // them all; otherwise mark them all found. Pips keep per-copy control.
   const toggleGroup = (g: Group) => {
+    if (live()) return;
     const allFound = g.copies.every((c) => session.found[c.location]);
     for (const c of g.copies) {
       if (!!session.found[c.location] === allFound) toggleFound(c.location);
@@ -35,9 +39,10 @@ export function KeyItemTray() {
   };
 
   return (
-    <div class="tray">
+    <div class="tray" data-live={live()}>
       <div class="panel-head">
-        Key Items <span class="muted">— click when you find one</span>
+        Key Items{" "}
+        <span class="muted">{live() ? "— found automatically" : "— click when you find one"}</span>
       </div>
       <Show
         when={groups().length}
@@ -59,10 +64,19 @@ export function KeyItemTray() {
                       <button
                         class="pip"
                         data-on={!!session.found[c.location]}
-                        title={session.found[c.location] ? "found — click to undo" : "mark found"}
+                        disabled={live()}
+                        title={
+                          live()
+                            ? session.found[c.location]
+                              ? "found"
+                              : "not yet found"
+                            : session.found[c.location]
+                              ? "found — click to undo"
+                              : "mark found"
+                        }
                         onClick={(e) => {
                           e.stopPropagation();
-                          toggleFound(c.location);
+                          if (!live()) toggleFound(c.location);
                         }}
                       />
                     )}
