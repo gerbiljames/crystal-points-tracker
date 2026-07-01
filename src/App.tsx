@@ -1,5 +1,6 @@
 import { For, Show, createMemo } from "solid-js";
-import { session, scores, pending, loadSpoilerFile, selectSlot, cancelUpload, resetAll } from "./state";
+import { session, scores, pending, modifiers, loadSpoilerFile, selectSlot, cancelUpload, resetAll, setSettingsOpen } from "./state";
+import { displayName } from "./lib/data";
 import { Dropzone } from "./components/Dropzone";
 import { RegionGrid } from "./components/RegionGrid";
 import { KeyItemTray } from "./components/KeyItemTray";
@@ -22,6 +23,16 @@ export function App() {
             reset
           </button>
         </Show>
+        <button
+          class="cog-btn"
+          onClick={() => setSettingsOpen(true)}
+          aria-label="settings"
+          title="settings"
+        >
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M9.4 1H6.6l-.4 1.8c-.5.16-.97.44-1.37.8L3.1 3l-1.4 2.4 1.3 1.3c-.05.26-.1.53-.1.8s.05.54.1.8L1.7 9.6 3.1 12l1.73-.6c.4.36.87.64 1.37.8l.4 1.8h2.8l.4-1.8c.5-.16.97-.44 1.37-.8l1.73.6 1.4-2.4-1.3-1.3c.05-.26.1-.53.1-.8s-.05-.54-.1-.8l1.3-1.3L12.9 3l-1.73.6a3.7 3.7 0 0 0-1.37-.8L9.4 1ZM8 10.2A2.2 2.2 0 1 1 8 5.8a2.2 2.2 0 0 1 0 4.4Z" />
+          </svg>
+        </button>
         <a
           class="gh-link"
           href="https://github.com/gerbiljames/crystal-points-tracker"
@@ -43,6 +54,7 @@ export function App() {
       </main>
 
       <Show when={pending()}>{(p) => <SlotDialog slots={p().slots} />}</Show>
+      <Settings />
     </div>
   );
 }
@@ -125,7 +137,21 @@ function Tracker() {
         <RegionGrid />
         <aside class="side">
           <KeyItemTray />
-          <Settings />
+          <Show when={modifiers().length}>
+            <div class="modifiers">
+              <div class="modifiers-head">Active seed modifiers</div>
+              <For each={modifiers()}>
+                {(m) => (
+                  <div class="modifier-row">
+                    <span class="modifier-name">{m.modifier}</span>
+                    <span class="modifier-items">
+                      {m.items.map(displayName).join(", ")} +{m.amount}
+                    </span>
+                  </div>
+                )}
+              </For>
+            </div>
+          </Show>
         </aside>
       </div>
     </section>

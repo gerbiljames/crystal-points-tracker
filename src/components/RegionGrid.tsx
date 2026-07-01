@@ -2,7 +2,7 @@
 // value (the hint) and a basket of the key items the player has found there.
 
 import { For, Show } from "solid-js";
-import { scores, session } from "../state";
+import { scores, revealPoints } from "../state";
 
 export function RegionGrid() {
   return (
@@ -16,7 +16,7 @@ export function RegionGrid() {
           >
             <div class="region-top">
               <span class="region-name">{r.name}</span>
-              <Show when={session.revealPoints}>
+              <Show when={revealPoints()}>
                 <span class="region-pts" title={`${r.remaining} of ${r.total} points remaining`}>
                   <span class="rp-remaining">{r.remaining}</span>
                   <Show when={r.total !== r.remaining}>

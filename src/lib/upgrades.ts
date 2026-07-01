@@ -26,6 +26,9 @@ interface ConditionalRule {
 
 const RULES = rulesData as Rule[];
 const CONDITIONAL = conditionalData as ConditionalRule[];
+
+/** Items that only score under a seed setting — 0 otherwise, but still tunable. */
+export const CONDITIONAL_ITEMS: string[] = [...new Set(CONDITIONAL.map((r) => r.item))];
 const FALSEY = new Set(["", "off", "no", "none", "vanilla", "0", "disabled", "false"]);
 
 const truthy = (v?: string) => v != null && !FALSEY.has(v.trim().toLowerCase());

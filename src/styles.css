@@ -112,6 +112,22 @@ button.ghost.tiny { padding: 3px 8px; font-size: 9px; }
 }
 .gh-link:hover { color: var(--lav-bright); filter: drop-shadow(0 0 6px rgba(149, 123, 194, 0.6)); }
 .gh-link svg { width: 20px; height: 20px; display: block; fill: currentColor; }
+.cog-btn {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--ink-1);
+  cursor: pointer;
+  transition: color 140ms, filter 140ms;
+}
+.cog-btn:hover { color: var(--lav-bright); filter: drop-shadow(0 0 6px rgba(149, 123, 194, 0.6)); }
+.cog-btn svg { width: 19px; height: 19px; display: block; fill: currentColor; }
 
 main { padding: 32px 24px 48px; }
 
@@ -379,6 +395,18 @@ main { padding: 32px 24px 48px; }
   border: 1px solid var(--line-bright); padding: 3px 4px;
 }
 .pts-row input[data-custom="true"] { border-color: var(--pink); color: var(--pink); }
+
+/* ---------- settings modal ---------- */
+.settings-modal { width: min(460px, 100%); text-align: left; gap: 0; }
+.settings-modal .ghost { align-self: auto; margin-top: 0; }
+.modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.modal-head h2 { font-size: 22px; }
+.modal-close {
+  background: transparent; border: none; padding: 4px; cursor: pointer;
+  color: var(--ink-2); font-size: 15px; line-height: 1; transition: color 140ms;
+}
+.modal-close:hover { color: var(--lav-bright); }
+.modal-body { margin-top: 16px; max-height: 70vh; overflow: auto; }
 
 @media (max-width: 880px) {
   .landing { grid-template-columns: 1fr; }
